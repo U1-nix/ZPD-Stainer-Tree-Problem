@@ -1,8 +1,20 @@
 import java.util.ArrayList;
+import java.util.List;
 
-public class Apex {
+public class Apex implements Cloneable {
+    private List<Double> coordinates;
     private double functionValue;
-    private ArrayList coordinates;
+
+    public Apex(List<Double> coordinates, double functionValue) {
+        this.coordinates = coordinates;
+        this.functionValue = functionValue;
+    }
+
+    @Override
+    public Object clone() {
+        List<Double> coordinates = new ArrayList<>(this.getCoordinates());
+        return new Apex(coordinates, this.getFunctionValue());
+    }
 
     public double getFunctionValue() {
         return functionValue;
@@ -12,11 +24,11 @@ public class Apex {
         this.functionValue = functionValue;
     }
 
-    public ArrayList getCoordinates() {
+    public List<Double> getCoordinates() {
         return coordinates;
     }
 
-    public void setCoordinates(ArrayList coordinates) {
+    public void setCoordinates(List<Double> coordinates) {
         this.coordinates = coordinates;
     }
 }
