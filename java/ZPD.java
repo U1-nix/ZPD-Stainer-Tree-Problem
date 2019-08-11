@@ -12,6 +12,7 @@ public class ZPD {
         List<Apex> check = new ArrayList<>(NelderMead.minimise(p));
         for (Apex e : check) {
             System.out.println(e.getCoordinates());
+            System.out.println(e.getFunctionValue());
         }
     }
 }

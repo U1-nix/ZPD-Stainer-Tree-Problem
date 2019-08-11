@@ -10,6 +10,22 @@ public class NelderMead {
 
     public static List<Apex> minimise(Apex p0) {
         List<Apex> startingValues = new ArrayList<>(initialize(p0));
+
+        for (Apex e : startingValues) {
+            Function.testFunction(e);
+        }
+
+        Apex maxApex = findMaxFunctionValue(startingValues);
+        Apex secondMaxApex = findSecondMaxApex(startingValues);
+        Apex minApex = findMinApex(startingValues);
+
+        List<Double> xh = maxApex.getCoordinates();
+        double fh = maxApex.getFunctionValue();
+        List<Double> xg = secondMaxApex.getCoordinates();
+        double fg = secondMaxApex.getFunctionValue();
+        List<Double> xl = minApex.getCoordinates();
+        double fl = minApex.getFunctionValue();
+
         return startingValues;
     }
 
@@ -25,5 +41,37 @@ public class NelderMead {
             startingValues.add(p);
         }
         return startingValues;
+    }
+
+    private static Apex findMaxFunctionValue(List<Apex> startingValues) {
+        Apex max = startingValues.get(0);
+        for (Apex e : startingValues) {
+            if (max.getFunctionValue() < e.getFunctionValue()) {
+                max = e;
+            }
+        }
+        return max;
+    }
+
+    private static Apex findSecondMaxApex(List<Apex> startingValues) {
+        Apex max = startingValues.get(0);
+        Apex secondMax = startingValues.get(0);
+        for (Apex e : startingValues) {
+            if (max.getFunctionValue() < e.getFunctionValue()) {
+                secondMax = max;
+                max = e;
+            }
+        }
+        return secondMax;
+    }
+
+    private static Apex findMinApex(List<Apex> startingValues) {
+        Apex min = startingValues.get(0);
+        for (Apex e : startingValues) {
+            if (min.getFunctionValue() > e.getFunctionValue()) {
+                min = e;
+            }
+        }
+        return min;
     }
 }
