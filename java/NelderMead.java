@@ -19,26 +19,10 @@ public class NelderMead {
         Apex secondMaxApex = findSecondMaxApex(startingValues);
         Apex minApex = findMinApex(startingValues);
 
-        List<Double> xh = maxApex.getCoordinates();
-        //System.out.println("xh coords: " + xh);
-        double fh = maxApex.getFunctionValue();
-        //System.out.println("fh function value: " + fh);
-
-        List<Double> xg = secondMaxApex.getCoordinates();
-        //System.out.println("xg coords: " + xg);
-        double fg = secondMaxApex.getFunctionValue();
-        //System.out.println("fg function value: " + fg);
-
-        List<Double> xl = minApex.getCoordinates();
-        //System.out.println("xl coords: " + xl);
-        double fl = minApex.getFunctionValue();
-        //System.out.println("fl function value: " + fl);
-
-        Apex centerOfGravity = new Apex(findCenterOfGravity(xg, xl), 0.0);
+        Apex centerOfGravity = new Apex(findCenterOfGravity(secondMaxApex.getCoordinates(), minApex.getCoordinates()),
+                0.0);
         //System.out.println("x0: " + x0);
         Function.testFunction(centerOfGravity);
-
-        
 
         return startingValues;
     }
