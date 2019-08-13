@@ -10,9 +10,9 @@ public class ZPD {
         coordinates.add(x2);
         Apex p = new Apex(coordinates, 0.00);
         List<Apex> check = new ArrayList<>(NelderMead.minimise(p));
-        for (Apex e : check) {
-            System.out.println(e.getCoordinates());
-            System.out.println(e.getFunctionValue());
-        }
+//        for (Apex e : check) {
+//            System.out.println(e.getCoordinates());
+//            System.out.println(e.getFunctionValue());
+//        }
     }
 }

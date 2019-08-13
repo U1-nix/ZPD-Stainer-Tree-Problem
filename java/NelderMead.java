@@ -3,7 +3,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class NelderMead {
-    private static double alpha;
+    private static double alpha = 1;
     private static double beta;
     private static double gamma;
     private static int n = 2;
@@ -19,12 +19,35 @@ public class NelderMead {
         Apex secondMaxApex = findSecondMaxApex(startingValues);
         Apex minApex = findMinApex(startingValues);
 
+        debug(maxApex, secondMaxApex, minApex);
+
         Apex centerOfGravity = new Apex(findCenterOfGravity(secondMaxApex.getCoordinates(), minApex.getCoordinates()),
                 0.0);
-        //System.out.println("x0: " + x0);
+        System.out.println("center of gravity coordinates: " + centerOfGravity.getCoordinates());
         Function.testFunction(centerOfGravity);
 
+        Apex reflectedApex = new Apex(reflect(centerOfGravity.getCoordinates(), maxApex.getCoordinates()), 0.00);
+        System.out.println("reflected apex coords: " + reflectedApex.getCoordinates());
+
         return startingValues;
+    }
+
+    private static void debug(Apex maxApex, Apex secondMaxApex, Apex minApex) {
+        System.out.println("max apex coords: " + maxApex.getCoordinates());
+        System.out.println("max apex function value: " + maxApex.getFunctionValue());
+        System.out.println("second max apex coords: " + secondMaxApex.getCoordinates());
+        System.out.println("second max apex function value: " + secondMaxApex.getFunctionValue());
+        System.out.println("min apex coords: " + minApex.getCoordinates());
+        System.out.println("min apex function value: " + minApex.getFunctionValue());
+    }
+
+    private static List<Double> reflect(List<Double> centerOfGravityCoordinates, List<Double> maxApexCoordinates) {
+        List<Double> reflectedCoordinates = new ArrayList<>();
+        for (int i = 0; i < centerOfGravityCoordinates.size(); i++) {
+            double result = (1 + alpha) * centerOfGravityCoordinates.get(i) - alpha * maxApexCoordinates.get(i);
+            reflectedCoordinates.add(result);
+        }
+        return reflectedCoordinates;
     }
 
     private static List<Double> findCenterOfGravity(List<Double> xg, List<Double> xl) {
