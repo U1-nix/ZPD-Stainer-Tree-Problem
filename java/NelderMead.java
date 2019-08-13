@@ -20,15 +20,23 @@ public class NelderMead {
         Apex minApex = findMinApex(startingValues);
 
         List<Double> xh = maxApex.getCoordinates();
+        //System.out.println("xh coords: " + xh);
         double fh = maxApex.getFunctionValue();
+        //System.out.println("fh function value: " + fh);
+
         List<Double> xg = secondMaxApex.getCoordinates();
+        //System.out.println("xg coords: " + xg);
         double fg = secondMaxApex.getFunctionValue();
+        //System.out.println("fg function value: " + fg);
+
         List<Double> xl = minApex.getCoordinates();
+        //System.out.println("xl coords: " + xl);
         double fl = minApex.getFunctionValue();
+        //System.out.println("fl function value: " + fl);
 
         return startingValues;
     }
-
+    
     private static List<Apex> initialize(Apex p0) {
         List<Apex> startingValues = new LinkedList<>();
         startingValues.add(p0);
@@ -60,6 +68,8 @@ public class NelderMead {
             if (max.getFunctionValue() < e.getFunctionValue()) {
                 secondMax = max;
                 max = e;
+            } else if (e.getFunctionValue() >= secondMax.getFunctionValue() && e.getFunctionValue() == max.getFunctionValue()) {
+                secondMax = e;
             }
         }
         return secondMax;
