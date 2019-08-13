@@ -34,9 +34,22 @@ public class NelderMead {
         double fl = minApex.getFunctionValue();
         //System.out.println("fl function value: " + fl);
 
+        List<Double> x0 = findCenterOfGravity(xg, xl);
+        //System.out.println("x0: " + x0);
+
         return startingValues;
     }
-    
+
+    private static List<Double> findCenterOfGravity(List<Double> xg, List<Double> xl) {
+        List<Double> centerOfGravity = new ArrayList<>();
+        for (int j = 0; j < xg.size(); j++) {
+            double sum = 0;
+            sum += xg.get(j) + xl.get(j);
+            centerOfGravity.add(sum / n);
+        }
+        return centerOfGravity;
+    }
+
     private static List<Apex> initialize(Apex p0) {
         List<Apex> startingValues = new LinkedList<>();
         startingValues.add(p0);
