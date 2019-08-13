@@ -25,9 +25,12 @@ public class NelderMead {
                 0.0);
         System.out.println("center of gravity coordinates: " + centerOfGravity.getCoordinates());
         Function.testFunction(centerOfGravity);
+        System.out.println("center of gravity function value: " + centerOfGravity.getFunctionValue());
 
         Apex reflectedApex = new Apex(reflect(centerOfGravity.getCoordinates(), maxApex.getCoordinates()), 0.00);
         System.out.println("reflected apex coords: " + reflectedApex.getCoordinates());
+        Function.testFunction(reflectedApex);
+        System.out.println("reflected apex function value: " + reflectedApex.getFunctionValue());
 
         return startingValues;
     }
