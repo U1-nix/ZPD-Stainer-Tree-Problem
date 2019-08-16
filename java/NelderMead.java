@@ -32,7 +32,27 @@ public class NelderMead {
         Function.testFunction(reflectedApex);
         System.out.println("reflected apex function value: " + reflectedApex.getFunctionValue());
 
+        comparison(reflectedApex, minApex, centerOfGravity);
+
         return startingValues;
+    }
+
+    private static void comparison(Apex reflectedApex, Apex minApex, Apex centerOfGravity) {
+        if (reflectedApex.getFunctionValue() < minApex.getFunctionValue()) {
+            //right way
+            Apex strainedApex = new Apex(findStrainedApex(reflectedApex.getCoordinates(), centerOfGravity.getCoordinates()),
+                    0.00);
+            Function.testFunction(strainedApex);
+        }
+    }
+
+    private static List<Double> findStrainedApex(List<Double> reflectedApexCoordinates, List<Double> centerOfGravityCoordinates) {
+        List<Double> strainedCoordinates = new ArrayList<>();
+        for (int i = 0; i < centerOfGravityCoordinates.size(); i++) {
+            double result = gamma * reflectedApexCoordinates.get(i) + (1 - gamma) * centerOfGravityCoordinates.get(i);
+            strainedCoordinates.add(result);
+        }
+        return strainedCoordinates;
     }
 
     private static void debug(Apex maxApex, Apex secondMaxApex, Apex minApex) {
