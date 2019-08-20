@@ -32,6 +32,7 @@ public class NelderMead {
         Function.testFunction(reflectedApex);
         System.out.println("reflected apex function value: " + reflectedApex.getFunctionValue());
 
+        //TODO: loop this method
         comparison(reflectedApex, minApex, centerOfGravity, maxApex, secondMaxApex);
 
         return startingValues;
@@ -46,14 +47,14 @@ public class NelderMead {
             if (strainedApex.getFunctionValue() < minApex.getFunctionValue()) {
                 // very good result
                 maxApex = (Apex) strainedApex.clone();
-                // precision check
+                // TODO: precision check
                 // if TRUE stop
                 // else find max, secondMax, min
             } else {
                 if (strainedApex.getFunctionValue() >= minApex.getFunctionValue()) {
                     // too far
                     maxApex = (Apex) reflectedApex.clone();
-                    // precision check
+                    // TODO: precision check
                     // if TRUE stop
                     // else findCenterOfGravity
                 }
@@ -62,7 +63,7 @@ public class NelderMead {
             if (reflectedApex.getFunctionValue() > minApex.getFunctionValue()
                     && reflectedApex.getFunctionValue() <= secondMaxApex.getFunctionValue()) {
                 maxApex = (Apex) reflectedApex.clone();
-                // precision check
+                // TODO: precision check
                 // if TRUE stop
                 // else find max, secondMax, min
             } else {
@@ -73,7 +74,30 @@ public class NelderMead {
                 // too far
                 Apex compressedApex = new Apex(findCompressedApex(maxApex, centerOfGravity), 0.00);
                 Function.testFunction(compressedApex);
+                if (compressedApex.getFunctionValue() < maxApex.getFunctionValue()) {
+                    maxApex = (Apex) compressedApex.clone();
+                    // TODO: precision check
+                    // if TRUE stop
+                    // else find max, secondMax, min
+                } else {
+                    // double downsizing
+                    doubleDownsizing(maxApex, secondMaxApex, minApex);
+                    // TODO: precision check
+                    // if TRUE stop
+                    // else findCenterOfGravity
+                }
             }
+        }
+    }
+
+    private static void doubleDownsizing(Apex maxApex, Apex secondMaxApex, Apex minApex) {
+        for (int i = 0; i < maxApex.getCoordinates().size(); i++) {
+            double xi = (maxApex.getCoordinates().get(i) + minApex.getCoordinates().get(i)) / 2;
+            maxApex.getCoordinates().set(i, xi);
+        }
+        for (int i = 0; i < secondMaxApex.getCoordinates().size(); i++) {
+            double xi = (secondMaxApex.getCoordinates().get(i) + minApex.getCoordinates().get(i)) / 2;
+            secondMaxApex.getCoordinates().set(i, xi);
         }
     }
 
