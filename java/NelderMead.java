@@ -32,18 +32,58 @@ public class NelderMead {
         Function.testFunction(reflectedApex);
         System.out.println("reflected apex function value: " + reflectedApex.getFunctionValue());
 
-        comparison(reflectedApex, minApex, centerOfGravity);
+        comparison(reflectedApex, minApex, centerOfGravity, maxApex, secondMaxApex);
 
         return startingValues;
     }
 
-    private static void comparison(Apex reflectedApex, Apex minApex, Apex centerOfGravity) {
+    private static void comparison(Apex reflectedApex, Apex minApex, Apex centerOfGravity, Apex maxApex, Apex secondMaxApex) {
         if (reflectedApex.getFunctionValue() < minApex.getFunctionValue()) {
             //right way
             Apex strainedApex = new Apex(findStrainedApex(reflectedApex.getCoordinates(), centerOfGravity.getCoordinates()),
                     0.00);
             Function.testFunction(strainedApex);
+            if (strainedApex.getFunctionValue() < minApex.getFunctionValue()) {
+                // very good result
+                maxApex = (Apex) strainedApex.clone();
+                // precision check
+                // if TRUE stop
+                // else find max, secondMax, min
+            } else {
+                if (strainedApex.getFunctionValue() >= minApex.getFunctionValue()) {
+                    // too far
+                    maxApex = (Apex) reflectedApex.clone();
+                    // precision check
+                    // if TRUE stop
+                    // else findCenterOfGravity
+                }
+            }
+        } else {
+            if (reflectedApex.getFunctionValue() > minApex.getFunctionValue()
+                    && reflectedApex.getFunctionValue() <= secondMaxApex.getFunctionValue()) {
+                maxApex = (Apex) reflectedApex.clone();
+                // precision check
+                // if TRUE stop
+                // else find max, secondMax, min
+            } else {
+                if (reflectedApex.getFunctionValue() < maxApex.getFunctionValue()) {
+                    maxApex = (Apex) reflectedApex.clone();
+                }
+                // reflectedApex.getFunctionValue > maxApex.getFunctionValue
+                // too far
+                Apex compressedApex = new Apex(findCompressedApex(maxApex, centerOfGravity), 0.00);
+                Function.testFunction(compressedApex);
+            }
         }
+    }
+
+    private static List<Double> findCompressedApex(Apex maxApex, Apex centerOfGravity) {
+        List<Double> compressedCoordinates = new ArrayList<>();
+        for (int i = 0; i < maxApex.getCoordinates().size(); i++) {
+            double result = beta * maxApex.getCoordinates().get(i) + (1 - beta) * centerOfGravity.getCoordinates().get(i);
+            compressedCoordinates.add(result);
+        }
+        return compressedCoordinates;
     }
 
     private static List<Double> findStrainedApex(List<Double> reflectedApexCoordinates, List<Double> centerOfGravityCoordinates) {
