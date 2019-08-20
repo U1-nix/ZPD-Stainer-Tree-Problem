@@ -4,8 +4,8 @@ import java.util.List;
 
 public class NelderMead {
     private static double alpha = 1;
-    private static double beta;
-    private static double gamma;
+    private static double beta = 0.5;
+    private static double gamma = 2;
     private static int n = 2;
 
     public static List<Apex> minimise(Apex p0) {
