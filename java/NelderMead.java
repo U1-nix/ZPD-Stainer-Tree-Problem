@@ -19,23 +19,29 @@ public class NelderMead {
         Apex secondMaxApex = findSecondMaxApex(startingValues);
         Apex minApex = findMinApex(startingValues);
 
-        debug(maxApex, secondMaxApex, minApex);
+        debugMain(maxApex, secondMaxApex, minApex);
 
         Apex centerOfGravity = new Apex(findCenterOfGravity(secondMaxApex.getCoordinates(), minApex.getCoordinates()),
                 0.0);
-        System.out.println("center of gravity coordinates: " + centerOfGravity.getCoordinates());
         Function.testFunction(centerOfGravity);
-        System.out.println("center of gravity function value: " + centerOfGravity.getFunctionValue());
 
-        Apex reflectedApex = new Apex(reflect(centerOfGravity.getCoordinates(), maxApex.getCoordinates()), 0.00);
-        System.out.println("reflected apex coords: " + reflectedApex.getCoordinates());
+        Apex reflectedApex = new Apex(reflect(centerOfGravity.getCoordinates(), maxApex.getCoordinates()),
+                0.0);
         Function.testFunction(reflectedApex);
-        System.out.println("reflected apex function value: " + reflectedApex.getFunctionValue());
+
+        debugAdditional(centerOfGravity, reflectedApex);
 
         //TODO: loop this method
         comparison(reflectedApex, minApex, centerOfGravity, maxApex, secondMaxApex);
 
         return startingValues;
+    }
+
+    private static void debugAdditional(Apex centerOfGravity, Apex reflectedApex) {
+        System.out.println("center of gravity coordinates: " + centerOfGravity.getCoordinates());
+        System.out.println("center of gravity function value: " + centerOfGravity.getFunctionValue());
+        System.out.println("reflected apex coords: " + reflectedApex.getCoordinates());
+        System.out.println("reflected apex function value: " + reflectedApex.getFunctionValue());
     }
 
     private static void comparison(Apex reflectedApex, Apex minApex, Apex centerOfGravity, Apex maxApex, Apex secondMaxApex) {
@@ -147,7 +153,7 @@ public class NelderMead {
         return strainedCoordinates;
     }
 
-    private static void debug(Apex maxApex, Apex secondMaxApex, Apex minApex) {
+    private static void debugMain(Apex maxApex, Apex secondMaxApex, Apex minApex) {
         System.out.println("max apex coords: " + maxApex.getCoordinates());
         System.out.println("max apex function value: " + maxApex.getFunctionValue());
         System.out.println("second max apex coords: " + secondMaxApex.getCoordinates());
