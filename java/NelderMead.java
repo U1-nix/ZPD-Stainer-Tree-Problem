@@ -90,6 +90,34 @@ public class NelderMead {
         }
     }
 
+    private static boolean checkPrecision(Apex maxApex, Apex secondMaxApex, Apex minApex, double epsilon) {
+        boolean state = false;
+        boolean result = checkTwoApexes(maxApex, secondMaxApex, epsilon);
+        if (result) {
+            result = checkTwoApexes(secondMaxApex, minApex, epsilon);
+            if (result) {
+                result = checkTwoApexes(maxApex, minApex, epsilon);
+                if (result) {
+                    state = true;
+                }
+            }
+        }
+        return state;
+    }
+
+    private static boolean checkTwoApexes(Apex firstApex, Apex secondApex, double epsilon) {
+        List<Double> coords = new ArrayList<>();
+        for (int i = 0; i < firstApex.getCoordinates().size(); i++) {
+            coords.add(firstApex.getCoordinates().get(i) - secondApex.getCoordinates().get(i));
+        }
+        double length = 0.0;
+        for (double e : coords) {
+            e = Math.pow(e, 2);
+            length += e;
+        }
+        return Math.abs(length) < epsilon;
+    }
+
     private static void doubleDownsizing(Apex maxApex, Apex secondMaxApex, Apex minApex) {
         for (int i = 0; i < maxApex.getCoordinates().size(); i++) {
             double xi = (maxApex.getCoordinates().get(i) + minApex.getCoordinates().get(i)) / 2;
