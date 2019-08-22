@@ -3,16 +3,15 @@ import java.util.List;
 
 public class ZPD {
     public static void main(String[] args) {
-        Double x1 = 1.00;
-        Double x2 = 2.00;
+        Double x1 = 5.0;
+        Double x2 = -5.0;
         List<Double> coordinates = new ArrayList<>();
         coordinates.add(x1);
         coordinates.add(x2);
         Apex p = new Apex(coordinates, 0.00);
-        List<Apex> check = new ArrayList<>(NelderMead.minimise(p));
-//        for (Apex e : check) {
-//            System.out.println(e.getCoordinates());
-//            System.out.println(e.getFunctionValue());
-//        }
+        Apex result = p.clone();
+        result = (NelderMead.minimise(p));
+        System.out.println(result.getCoordinates());
+        System.out.println(result.getFunctionValue());
     }
 }

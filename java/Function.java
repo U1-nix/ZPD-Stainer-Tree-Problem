@@ -1,9 +1,11 @@
 public class Function {
-    public static void testFunction(Apex p) {
+    public static double testFunction(Apex p) {
         double functionValue = 0;
-        for (Double e : p.getCoordinates()) {
-            functionValue = e + functionValue;
-        }
-        p.setFunctionValue(functionValue);
+        double element1 = p.getCoordinates().get(0);
+        element1 = Math.pow(element1, 2);
+        double element2 = p.getCoordinates().get(1);
+        element2 = Math.pow(element2, 2);
+        functionValue = element1 + element2 + element1;
+        return functionValue;
     }
 }

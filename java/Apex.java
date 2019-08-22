@@ -11,7 +11,7 @@ public class Apex implements Cloneable {
     }
 
     @Override
-    public Object clone() {
+    public Apex clone() {
         List<Double> coordinates = new ArrayList<>(this.getCoordinates());
         return new Apex(coordinates, this.getFunctionValue());
     }
