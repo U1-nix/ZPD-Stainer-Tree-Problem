@@ -1,10 +1,13 @@
+import NelderMead.NelderMead;
+import model.Apex;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class ZPD {
     public static void main(String[] args) {
-        Double x1 = 5.0;
-        Double x2 = -5.0;
+        Double x1 = 1.0;
+        Double x2 = 2.0;
         List<Double> coordinates = new ArrayList<>();
         coordinates.add(x1);
         coordinates.add(x2);
