@@ -1,4 +1,4 @@
-package model;
+package NelderMead.model;
 
 import java.util.ArrayList;
 import java.util.List;

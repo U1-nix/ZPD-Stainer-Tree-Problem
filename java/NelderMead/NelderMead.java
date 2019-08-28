@@ -1,6 +1,6 @@
 package NelderMead;
 
-import model.Apex;
+import NelderMead.model.Apex;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -10,7 +10,7 @@ public class NelderMead {
     private static double alpha = 1;
     private static double beta = 0.5;
     private static double gamma = 2;
-    private static double epsilon = 0.1;
+    private static double epsilon = 0.00001;
 
     public static Apex minimise(Apex p0) {
         // create Apexes according to p0

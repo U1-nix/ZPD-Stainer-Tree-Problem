@@ -1,5 +1,5 @@
 import NelderMead.NelderMead;
-import model.Apex;
+import NelderMead.model.Apex;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,8 +12,7 @@ public class ZPD {
         coordinates.add(x1);
         coordinates.add(x2);
         Apex p = new Apex(coordinates, 0.00);
-        Apex result = p.clone();
-        result = (NelderMead.minimise(p));
+        Apex result = (NelderMead.minimise(p));
         System.out.println(result.getCoordinates());
         System.out.println(result.getFunctionValue());
     }

@@ -1,6 +1,6 @@
 package NelderMead;
 
-import model.Apex;
+import NelderMead.model.Apex;
 
 public class Function {
     public static double testFunction(Apex p) {
