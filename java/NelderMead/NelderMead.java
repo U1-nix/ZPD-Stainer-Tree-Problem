@@ -10,7 +10,6 @@ public class NelderMead {
     private static double alpha = 1;
     private static double beta = 0.5;
     private static double gamma = 2;
-    private static int n = 2;
     private static double epsilon = 0.1;
 
     public static Apex minimise(Apex p0) {
@@ -106,7 +105,7 @@ public class NelderMead {
     private static List<Apex> initialize(Apex p0) {
         List<Apex> startingValues = new LinkedList<>();
         startingValues.add(p0);
-        for (int i = 1; i <= n; i++) {
+        for (int i = 1; i <= p0.getCoordinates().size(); i++) {
             Apex p = p0.clone();
             double x = p.getCoordinates().get(i - 1);
             p.getCoordinates().remove(i - 1);
@@ -158,12 +157,12 @@ public class NelderMead {
         return centerOfGravity;
     }
 
-    private static List<Double> findCenterOfGravity(List<Double> xg, List<Double> xl) {
+    private static List<Double> findCenterOfGravity(List<Double> secondMaxApexCoordinates, List<Double> minApexCoordinates) {
         List<Double> centerOfGravity = new ArrayList<>();
-        for (int j = 0; j < xg.size(); j++) {
+        for (int i = 0; i < secondMaxApexCoordinates.size(); i++) {
             double sum = 0;
-            sum += xg.get(j) + xl.get(j);
-            centerOfGravity.add(sum / n);
+            sum += secondMaxApexCoordinates.get(i) + minApexCoordinates.get(i);
+            centerOfGravity.add(sum / secondMaxApexCoordinates.size());
         }
         return centerOfGravity;
     }
@@ -239,12 +238,12 @@ public class NelderMead {
     }
 
     private static boolean checkTwoApexes(Apex firstApex, Apex secondApex) {
-        List<Double> coords = new ArrayList<>();
+        List<Double> coordinates = new ArrayList<>();
         for (int i = 0; i < firstApex.getCoordinates().size(); i++) {
-            coords.add(Math.abs(firstApex.getCoordinates().get(i) - secondApex.getCoordinates().get(i)));
+            coordinates.add(Math.abs(firstApex.getCoordinates().get(i) - secondApex.getCoordinates().get(i)));
         }
         double length = 0.0;
-        for (double e : coords) {
+        for (double e : coordinates) {
             e = Math.pow(e, 2);
             length += e;
         }
