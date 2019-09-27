@@ -1,6 +1,6 @@
-package NelderMead;
+package nelderMead;
 
-import NelderMead.model.Apex;
+import nelderMead.model.Apex;
 
 public interface calculations {
     double calculate(Apex p);

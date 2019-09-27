@@ -1,6 +1,6 @@
-package NelderMead;
+package nelderMead;
 
-import NelderMead.model.Apex;
+import nelderMead.model.Apex;
 
 public class FunctionSumSquares implements calculations {
     public double calculate(Apex p) {

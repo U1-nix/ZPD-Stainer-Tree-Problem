@@ -1,6 +1,6 @@
-package NelderMead;
+package nelderMead;
 
-import NelderMead.model.Apex;
+import nelderMead.model.Apex;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -43,18 +43,18 @@ public class NelderMead {
                     maxApex = strainedApex.clone();
                     startingValues.set(0, maxApex);
                     if (checkPrecision(maxApex, secondMaxApex, minApex)) {
-                        // start again
                         contin = false;
                     }
+                    // else start again
                 } else {
                     if (strainedApex.getFunctionValue() >= minApex.getFunctionValue()) {
                         // too far
                         maxApex = reflectedApex.clone();
                         startingValues.set(0, maxApex);
                         if (checkPrecision(maxApex, secondMaxApex, minApex)) {
-                            // start again
                             contin = false;
                         }
+                        // else start again
                     }
                 }
             } else {
@@ -63,9 +63,9 @@ public class NelderMead {
                     maxApex = reflectedApex.clone();
                     startingValues.set(0, maxApex);
                     if (checkPrecision(maxApex, secondMaxApex, minApex)) {
-                        // start again
                         contin = false;
                     }
+                    // else start again
                 } else {
                     if (reflectedApex.getFunctionValue() < maxApex.getFunctionValue()) {
                         maxApex = reflectedApex.clone();
@@ -77,9 +77,9 @@ public class NelderMead {
                         maxApex = compressedApex.clone();
                         startingValues.set(0, maxApex);
                         if (checkPrecision(maxApex, secondMaxApex, minApex)) {
-                            // start again
                             contin = false;
                         }
+                        // else start again
                     } else {
                         // double downsizing
                         maxApex = downsize(maxApex, minApex);
@@ -93,9 +93,9 @@ public class NelderMead {
                         minApex.setFunctionValue(f.calculate(minApex));
                         startingValues.set(2, minApex);
                         if (checkPrecision(maxApex, secondMaxApex, minApex)) {
-                            // start again
                             contin = false;
                         }
+                        // else start again
                     }
                 }
             }
