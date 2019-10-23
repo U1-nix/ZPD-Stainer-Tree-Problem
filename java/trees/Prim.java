@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Prim {
 
-    public static List<TreeApex> createMinimumSpanningTree(List<TreeApex> apexes) {
+    public static void createMinimumSpanningTree(List<TreeApex> apexes) {
         for (int k = 0; k < apexes.size() - 1; k++) {
             List<Distance> minDistances = new ArrayList<>();
             for (int i = 0; i < apexes.size(); i++) { // here
@@ -47,7 +47,6 @@ public class Prim {
                 break;
             }
         }
-        return apexes;
     }
 
     private static Distance findMinDistance(List<Distance> distances) {

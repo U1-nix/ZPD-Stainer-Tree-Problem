@@ -3,6 +3,10 @@ import trees.Debug;
 import trees.Tools;
 import trees.model.TreeApex;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -26,9 +30,45 @@ public class ZPD {
 
     public static List<TreeApex> initializeTreeApexes() {
         List<TreeApex> apexes = new ArrayList<>();
-        int idCounter = initializeMainTreeApexes(apexes);
+        //int idCounter = initializeMainTreeApexes(apexes);
+        int idCounter = initializeMainTreeApexesFromFile(apexes);
         initializeAdditionalTreeApexes(apexes, idCounter);
         return apexes;
+    }
+
+    private static int initializeMainTreeApexesFromFile(List<TreeApex> apexes) {
+        int idCounter = 0;
+        File file = new File("C:\\Coding\\Java Projects\\ZPDStainerTreeProblem\\src\\main\\java\\in.txt");
+        if (file.exists())
+            System.out.println("Exists");
+        try {
+            FileReader fileReader = new FileReader(file);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            int numberOfMainApexes = Integer.parseInt(bufferedReader.readLine());
+            for (int i = 0; i < numberOfMainApexes; i++) {
+                TreeApex treeApex = new TreeApex();
+                treeApex.setId(i);
+                if (i == 0) {
+                    // -2 means first tree apex
+                    treeApex.setPreviousApexId(-2);
+                } else {
+                    treeApex.setPreviousApexId(-1);
+                }
+                treeApex.setConnectedFurther(false);
+                treeApex.setDistanceToParent(Double.MAX_VALUE);
+                List<Double> coordinates = new ArrayList<>();
+                coordinates.add(Double.parseDouble(bufferedReader.readLine()));
+                coordinates.add(Double.parseDouble(bufferedReader.readLine()));
+                treeApex.setCoordinates(coordinates);
+                treeApex.setAdditional(false);
+                apexes.add(treeApex);
+                idCounter++;
+            }
+        } catch (IOException e) {
+            System.out.println("Problem with file");
+            System.out.println(e);
+        }
+        return idCounter;
     }
 
     private static int initializeMainTreeApexes(List<TreeApex> apexes) {
@@ -90,8 +130,8 @@ public class ZPD {
 
         TreeApex treeApex1 = new TreeApex();
         List<Double> coordinates1 = new ArrayList<>();
-        coordinates1.add(3000.5);
-        coordinates1.add(600.5);
+        coordinates1.add(3.5);
+        coordinates1.add(1.5);
         treeApex1.setCoordinates(coordinates1);
         treeApex1.setId(4);
         treeApex1.setPreviousApexId(-1);
@@ -102,8 +142,8 @@ public class ZPD {
 
         TreeApex treeApex2 = new TreeApex();
         List<Double> coordinates2 = new ArrayList<>();
-        coordinates2.add(1000.0);
-        coordinates2.add(200.5);
+        coordinates2.add(-2.8);
+        coordinates2.add(-2.0);
         treeApex2.setCoordinates(coordinates2);
         treeApex2.setId(5);
         treeApex2.setPreviousApexId(-1);

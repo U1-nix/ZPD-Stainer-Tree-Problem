@@ -40,8 +40,7 @@ public class NelderMead {
             if (reflectedApex.getFunctionValue() < minApex.getFunctionValue()) {
                 //right way
                 Apex strainedApex = initializeStrainedApex(reflectedApex.getCoordinates(), centerOfGravity.getCoordinates(), apexes);
-                if (strainedApex.getFunctionValue() < minApex.getFunctionValue()
-                        && strainedApex.getFunctionValue() < reflectedApex.getFunctionValue()) {
+                if (strainedApex.getFunctionValue() < minApex.getFunctionValue()) {
                     // very good result
                     maxApex = strainedApex.clone();
                     startingValues.set(0, maxApex);
@@ -50,19 +49,18 @@ public class NelderMead {
                     }
                     // else start again
                 } else {
-                    //if (strainedApex.getFunctionValue() >= minApex.getFunctionValue()) {
-                        // too far
-                        maxApex = reflectedApex.clone();
-                        startingValues.set(0, maxApex);
-                        if (checkPrecision(maxApex, secondMaxApex, minApex)) {
-                            break;
-                        }
-                        // else start again
-                    //}
+
+                    // too far
+                    maxApex = reflectedApex.clone();
+                    startingValues.set(0, maxApex);
+                    if (checkPrecision(maxApex, secondMaxApex, minApex)) {
+                        break;
+                    }
+                    // else start again
+
                 }
             } else {
-                if (reflectedApex.getFunctionValue() > minApex.getFunctionValue()
-                        && reflectedApex.getFunctionValue() <= secondMaxApex.getFunctionValue()) {
+                if (reflectedApex.getFunctionValue() <= secondMaxApex.getFunctionValue()) {
                     maxApex = reflectedApex.clone();
                     startingValues.set(0, maxApex);
                     if (checkPrecision(maxApex, secondMaxApex, minApex)) {
@@ -105,8 +103,7 @@ public class NelderMead {
         }
         System.out.println("Finishing Nelder Mead's algorithm");
         // return minApex;
-        //return startingValues.get(2).getCoordinates();
-        return findMinApex(startingValues).getCoordinates();
+        return startingValues.get(2).getCoordinates();
     }
 
     private static List<Apex> initialize(Apex p0) {
