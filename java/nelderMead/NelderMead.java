@@ -1,6 +1,8 @@
 package nelderMead;
 
 import nelderMead.model.Apex;
+import trees.Minimising;
+import trees.model.TreeApex;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -10,52 +12,53 @@ public class NelderMead {
     private static double alpha = 1;
     private static double beta = 0.5;
     private static double gamma = 2;
-    private static double epsilon = 0.000001;
+    private static double epsilon = 0.1;
 
-    public static Apex minimise(Apex p0, calculations f) {
-        //calculations f = new Functions();
-
+    public static List<Double> minimise(List<Double> startingCoordinates, List<TreeApex> apexes) {
+        System.out.println("Beginning Nelder Mead's algorithm");
+        Apex p0 = new Apex(startingCoordinates, 0.0);
         // create Apexes according to p0
         List<Apex> startingValues = new ArrayList<>(initialize(p0));
         for (Apex e : startingValues) {
-            e.setFunctionValue(f.calculate(e));
+            e.setFunctionValue(Minimising.minimisingFunction(e.getCoordinates(), apexes));
         }
 
-        boolean contin = true;
-        while (contin) {
+        while (true) {
             // ascending sort
             Apex maxApex = findMaxApex(startingValues);
             Apex secondMaxApex = findSecondMaxApex(startingValues);
             Apex minApex = findMinApex(startingValues);
-            startingValues.set(0, maxApex);                          // 0 - maxApex
-            startingValues.set(1, secondMaxApex);                    // 1 - secondMaxApex
-            startingValues.set(2, minApex);                          // 2 - minApex
+            startingValues.clear();
+            startingValues.add(0, maxApex);                          // 0 - maxApex
+            startingValues.add(1, secondMaxApex);                    // 1 - secondMaxApex
+            startingValues.add(2, minApex);                          // 2 - minApex
 
             // centerOfGravity and reflectedApex
-            Apex centerOfGravity = initializeCenterOfGravity(secondMaxApex.getCoordinates(), minApex.getCoordinates(), f);
-            Apex reflectedApex = initializeReflectedApex(centerOfGravity.getCoordinates(), maxApex.getCoordinates(), f);
+            Apex centerOfGravity = initializeCenterOfGravity(secondMaxApex.getCoordinates(), minApex.getCoordinates(), apexes);
+            Apex reflectedApex = initializeReflectedApex(centerOfGravity.getCoordinates(), maxApex.getCoordinates(), apexes);
 
             if (reflectedApex.getFunctionValue() < minApex.getFunctionValue()) {
                 //right way
-                Apex strainedApex = initializeStrainedApex(reflectedApex.getCoordinates(), centerOfGravity.getCoordinates(), f);
-                if (strainedApex.getFunctionValue() < minApex.getFunctionValue()) {
+                Apex strainedApex = initializeStrainedApex(reflectedApex.getCoordinates(), centerOfGravity.getCoordinates(), apexes);
+                if (strainedApex.getFunctionValue() < minApex.getFunctionValue()
+                        && strainedApex.getFunctionValue() < reflectedApex.getFunctionValue()) {
                     // very good result
                     maxApex = strainedApex.clone();
                     startingValues.set(0, maxApex);
                     if (checkPrecision(maxApex, secondMaxApex, minApex)) {
-                        contin = false;
+                        break;
                     }
                     // else start again
                 } else {
-                    if (strainedApex.getFunctionValue() >= minApex.getFunctionValue()) {
+                    //if (strainedApex.getFunctionValue() >= minApex.getFunctionValue()) {
                         // too far
                         maxApex = reflectedApex.clone();
                         startingValues.set(0, maxApex);
                         if (checkPrecision(maxApex, secondMaxApex, minApex)) {
-                            contin = false;
+                            break;
                         }
                         // else start again
-                    }
+                    //}
                 }
             } else {
                 if (reflectedApex.getFunctionValue() > minApex.getFunctionValue()
@@ -63,7 +66,7 @@ public class NelderMead {
                     maxApex = reflectedApex.clone();
                     startingValues.set(0, maxApex);
                     if (checkPrecision(maxApex, secondMaxApex, minApex)) {
-                        contin = false;
+                        break;
                     }
                     // else start again
                 } else {
@@ -72,36 +75,38 @@ public class NelderMead {
                         startingValues.set(0, maxApex);
                     }
                     // too far
-                    Apex compressedApex = initializeCompressedApex(maxApex.getCoordinates(), centerOfGravity.getCoordinates(), f);
+                    Apex compressedApex = initializeCompressedApex(maxApex.getCoordinates(), centerOfGravity.getCoordinates(), apexes);
                     if (compressedApex.getFunctionValue() < maxApex.getFunctionValue()) {
                         maxApex = compressedApex.clone();
                         startingValues.set(0, maxApex);
                         if (checkPrecision(maxApex, secondMaxApex, minApex)) {
-                            contin = false;
+                            break;
                         }
                         // else start again
                     } else {
                         // double downsizing
-                        maxApex = downsize(maxApex, minApex);
-                        maxApex.setFunctionValue(f.calculate(maxApex));
+                        maxApex = downsize(maxApex, minApex).clone();
+                        maxApex.setFunctionValue(Minimising.minimisingFunction(maxApex.getCoordinates(), apexes));
                         startingValues.set(0, maxApex);
 
-                        secondMaxApex = downsize(secondMaxApex, minApex);
-                        secondMaxApex.setFunctionValue(f.calculate(secondMaxApex));
+                        secondMaxApex = downsize(secondMaxApex, minApex).clone();
+                        secondMaxApex.setFunctionValue(Minimising.minimisingFunction(secondMaxApex.getCoordinates(), apexes));
                         startingValues.set(1, secondMaxApex);
 
-                        minApex.setFunctionValue(f.calculate(minApex));
+                        minApex.setFunctionValue(Minimising.minimisingFunction(minApex.getCoordinates(), apexes));
                         startingValues.set(2, minApex);
                         if (checkPrecision(maxApex, secondMaxApex, minApex)) {
-                            contin = false;
+                            break;
                         }
                         // else start again
                     }
                 }
             }
         }
+        System.out.println("Finishing Nelder Mead's algorithm");
         // return minApex;
-        return startingValues.get(2);
+        //return startingValues.get(2).getCoordinates();
+        return findMinApex(startingValues).getCoordinates();
     }
 
     private static List<Apex> initialize(Apex p0) {
@@ -156,27 +161,42 @@ public class NelderMead {
         return min;
     }
 
-    private static Apex initializeCenterOfGravity(List<Double> secondMaxApexCoordinates, List<Double> minApexCoordinates, calculations f) {
+    private static Apex initializeCenterOfGravity(List<Double> secondMaxApexCoordinates, List<Double> minApexCoordinates, List<TreeApex> apexes) {
         Apex centerOfGravity = new Apex(findCenterOfGravity(secondMaxApexCoordinates, minApexCoordinates),
                 0.0);
-        centerOfGravity.setFunctionValue(f.calculate(centerOfGravity));
+        System.out.println("Center Of Gravity");
+        System.out.println("Center Of Gravity Coordinates: " + centerOfGravity.getCoordinates());
+        System.out.println("Second Max Apex Coordinates: " + secondMaxApexCoordinates);
+        System.out.println("Min Apex Coordinates" + minApexCoordinates);
+        System.out.println("Beginning Prim's algorithm");
+        centerOfGravity.setFunctionValue(Minimising.minimisingFunction(centerOfGravity.getCoordinates(), apexes));
+        System.out.println("Finishing Prim's algorithm");
+        System.out.println(centerOfGravity.getFunctionValue());
+        System.out.println();
         return centerOfGravity;
     }
 
     private static List<Double> findCenterOfGravity(List<Double> secondMaxApexCoordinates, List<Double> minApexCoordinates) {
-        List<Double> centerOfGravity = new ArrayList<>();
+        List<Double> centerOfGravityCoordinates = new ArrayList<>();
         for (int i = 0; i < secondMaxApexCoordinates.size(); i++) {
-            double sum = 0;
-            sum += secondMaxApexCoordinates.get(i) + minApexCoordinates.get(i);
-            centerOfGravity.add(sum / secondMaxApexCoordinates.size());
+            double sum = secondMaxApexCoordinates.get(i) + minApexCoordinates.get(i);
+            centerOfGravityCoordinates.add(sum / 2);
         }
-        return centerOfGravity;
+        return centerOfGravityCoordinates;
     }
 
-    private static Apex initializeReflectedApex(List<Double> centerOfGravityCoordinates, List<Double> maxApexCoordinates, calculations f) {
+    private static Apex initializeReflectedApex(List<Double> centerOfGravityCoordinates, List<Double> maxApexCoordinates, List<TreeApex> apexes) {
         Apex reflectedApex = new Apex(reflect(centerOfGravityCoordinates, maxApexCoordinates),
                 0.0);
-        reflectedApex.setFunctionValue(f.calculate(reflectedApex));
+        System.out.println("Reflected Apex");
+        System.out.println("Reflected Apex Coordinates: " + reflectedApex.getCoordinates());
+        System.out.println("Center Of Gravity Coordinates: " + centerOfGravityCoordinates);
+        System.out.println("Max Apex Coordinates: " + maxApexCoordinates);
+        System.out.println("Beginning Prim's algorithm");
+        reflectedApex.setFunctionValue(Minimising.minimisingFunction(reflectedApex.getCoordinates(), apexes));
+        System.out.println("Finishing Prim's algorithm");
+        System.out.println(reflectedApex.getFunctionValue());
+        System.out.println();
         return reflectedApex;
     }
 
@@ -189,9 +209,17 @@ public class NelderMead {
         return reflectedCoordinates;
     }
 
-    private static Apex initializeStrainedApex(List<Double> reflectedApexCoordinates, List<Double> centerOfGravityCoordinates, calculations f) {
+    private static Apex initializeStrainedApex(List<Double> reflectedApexCoordinates, List<Double> centerOfGravityCoordinates, List<TreeApex> apexes) {
         Apex strainedApex = new Apex(strain(reflectedApexCoordinates, centerOfGravityCoordinates), 0.00);
-        strainedApex.setFunctionValue(f.calculate(strainedApex));
+        System.out.println("Strained Apex");
+        System.out.println("Strained Apex Coordinates: " + strainedApex.getCoordinates());
+        System.out.println("Reflected Apex Coordinates: " + reflectedApexCoordinates);
+        System.out.println("Center Of Gravity Coordinates: " + centerOfGravityCoordinates);
+        System.out.println("Beginning Prim's algorithm");
+        strainedApex.setFunctionValue(Minimising.minimisingFunction(strainedApex.getCoordinates(), apexes));
+        System.out.println("Finishing Prim's algorithm");
+        System.out.println(strainedApex.getFunctionValue());
+        System.out.println();
         return strainedApex;
     }
 
@@ -204,9 +232,17 @@ public class NelderMead {
         return strainedCoordinates;
     }
 
-    private static Apex initializeCompressedApex(List<Double> maxApexCoordinates, List<Double> centerOfGravityCoordinates, calculations f) {
+    private static Apex initializeCompressedApex(List<Double> maxApexCoordinates, List<Double> centerOfGravityCoordinates, List<TreeApex> apexes) {
         Apex compressedApex = new Apex(compress(maxApexCoordinates, centerOfGravityCoordinates), 0.0);
-        compressedApex.setFunctionValue(f.calculate(compressedApex));
+        System.out.println("Compressed Apex");
+        System.out.println("Compressed Apex Coordinates" + compressedApex.getCoordinates());
+        System.out.println("Max Apex Coordinates: " + maxApexCoordinates);
+        System.out.println("Center Of Gravity Coordinates: " + centerOfGravityCoordinates);
+        System.out.println("Beginning Prim's algorithm");
+        compressedApex.setFunctionValue(Minimising.minimisingFunction(compressedApex.getCoordinates(), apexes));
+        System.out.println("Finishing Prim's algorithm");
+        System.out.println(compressedApex.getFunctionValue());
+        System.out.println();
         return compressedApex;
     }
 
@@ -230,12 +266,9 @@ public class NelderMead {
 
     private static boolean checkPrecision(Apex maxApex, Apex secondMaxApex, Apex minApex) {
         boolean state = false;
-        boolean result = checkTwoApexes(maxApex, secondMaxApex);
-        if (result) {
-            result = checkTwoApexes(secondMaxApex, minApex);
-            if (result) {
-                result = checkTwoApexes(maxApex, minApex);
-                if (result) {
+        if (checkTwoApexes(maxApex, secondMaxApex)) {
+            if (checkTwoApexes(secondMaxApex, minApex)) {
+                if (checkTwoApexes(maxApex, minApex)) {
                     state = true;
                 }
             }
@@ -244,15 +277,6 @@ public class NelderMead {
     }
 
     private static boolean checkTwoApexes(Apex firstApex, Apex secondApex) {
-        List<Double> coordinates = new ArrayList<>();
-        for (int i = 0; i < firstApex.getCoordinates().size(); i++) {
-            coordinates.add(Math.abs(firstApex.getCoordinates().get(i) - secondApex.getCoordinates().get(i)));
-        }
-        double length = 0.0;
-        for (double e : coordinates) {
-            e = Math.pow(e, 2);
-            length += e;
-        }
-        return Math.sqrt(length) < epsilon;
+        return (Math.abs(firstApex.getFunctionValue() - secondApex.getFunctionValue()) < epsilon);
     }
 }

@@ -8,6 +8,7 @@ public class TreeApex {
     private int PreviousApexId;
     private boolean connectedFurther;
     private double distanceToParent;
+    private boolean isAdditional;
 
     public int getId() {
         return id;
@@ -47,5 +48,13 @@ public class TreeApex {
 
     public void setDistanceToParent(double distanceToParent) {
         this.distanceToParent = distanceToParent;
+    }
+
+    public boolean isAdditional() {
+        return isAdditional;
+    }
+
+    public void setAdditional(boolean additional) {
+        isAdditional = additional;
     }
 }

@@ -7,40 +7,44 @@ import java.util.List;
 
 public class Prim {
 
-    public static List<TreeApex> createMinimumSpanningTree(List<TreeApex> apexes, int numberOfApexes) {
-        for (int k = 0; k < numberOfApexes; k++) {
+    public static List<TreeApex> createMinimumSpanningTree(List<TreeApex> apexes) {
+        for (int k = 0; k < apexes.size() - 1; k++) {
             List<Distance> minDistances = new ArrayList<>();
-            for (int i = 0; i < apexes.size() - 1; i++) {
+            for (int i = 0; i < apexes.size(); i++) { // here
                 List<Distance> distances = new ArrayList<>();
+                //starting apex should be connected with tree
                 if (apexes.get(i).getPreviousApexId() != -1) {
                     for (TreeApex apex : apexes) {
-                        if (apex.getPreviousApexId() == -1) {
+                        //ending apex should not be the same apex
+                        if (apex.getPreviousApexId() == -1 && apex.getId() != apexes.get(i).getId()) {
                             double distance = measureDistance(apexes.get(i), apex);
-                            if (distance < apex.getDistanceToParent()) {
-                                Distance distance1 = new Distance();
-                                distance1.distanceToParent = distance;
-                                distance1.startingApexId = apex.getId();
-                                distance1.endingApexId = apexes.get(i).getId();
-                                distances.add(distance1);
-                            }
+                            Distance currentDistance = new Distance();
+                            currentDistance.distanceToParent = distance;
+                            currentDistance.startingApexId = apex.getId();
+                            currentDistance.endingApexId = apexes.get(i).getId();
+                            distances.add(currentDistance);
                         }
                     }
                     minDistances.add(findMinDistance(distances));
                 }
             }
-            Distance minDistance = findMinDistance(minDistances);
-            for (TreeApex e : apexes) {
-                if (e.getId() == minDistance.endingApexId) {
-                    e.setConnectedFurther(true);
-                    break;
+            if (minDistances.size() != 0) {
+                Distance minDistance = findMinDistance(minDistances);
+                for (TreeApex e : apexes) {
+                    if (e.getId() == minDistance.endingApexId) {
+                        e.setConnectedFurther(true);
+                        break;
+                    }
                 }
-            }
-            for (TreeApex e : apexes) {
-                if (e.getId() == minDistance.startingApexId) {
-                    e.setPreviousApexId(minDistance.endingApexId);
-                    e.setDistanceToParent(minDistance.distanceToParent);
-                    break;
+                for (TreeApex e : apexes) {
+                    if (e.getId() == minDistance.startingApexId) {
+                        e.setPreviousApexId(minDistance.endingApexId);
+                        e.setDistanceToParent(minDistance.distanceToParent);
+                        break;
+                    }
                 }
+            } else {
+                break;
             }
         }
         return apexes;
@@ -60,7 +64,7 @@ public class Prim {
     private static double measureDistance(TreeApex firstTreeApex, TreeApex secondTreeApex) {
         List<Double> coordinates = new ArrayList<>();
         for (int i = 0; i < firstTreeApex.getCoordinates().size(); i++) {
-            coordinates.add(Math.abs(firstTreeApex.getCoordinates().get(i) - secondTreeApex.getCoordinates().get(i)));
+            coordinates.add(Math.abs(secondTreeApex.getCoordinates().get(i) - firstTreeApex.getCoordinates().get(i)));
         }
         double length = 0.0;
         for (double e : coordinates) {
