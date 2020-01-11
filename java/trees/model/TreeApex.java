@@ -1,11 +1,12 @@
 package trees.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TreeApex {
     private int id;
     private List<Double> coordinates;
-    private int PreviousApexId;
+    private int previousApexId;
     private boolean connectedFurther;
     private double distanceToParent;
     private boolean isAdditional;
@@ -27,11 +28,11 @@ public class TreeApex {
     }
 
     public int getPreviousApexId() {
-        return PreviousApexId;
+        return previousApexId;
     }
 
     public void setPreviousApexId(int previousApexId) {
-        PreviousApexId = previousApexId;
+        this.previousApexId = previousApexId;
     }
 
     public boolean isConnectedFurther() {
@@ -56,5 +57,17 @@ public class TreeApex {
 
     public void setAdditional(boolean additional) {
         isAdditional = additional;
+    }
+
+    @Override
+    public TreeApex clone() {
+        TreeApex newApex = new TreeApex();
+        newApex.id = this.id;
+        newApex.coordinates = new ArrayList<>(this.coordinates);
+        newApex.previousApexId = this.previousApexId;
+        newApex.connectedFurther = this.connectedFurther;
+        newApex.distanceToParent = this.distanceToParent;
+        newApex.isAdditional = this.isAdditional;
+        return newApex;
     }
 }

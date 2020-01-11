@@ -23,13 +23,10 @@ public class Minimising {
         }
         clearAllConnections(apexes);
         Prim.createMinimumSpanningTree(apexes);
-        double sum = Tools.calculateTreeLength(apexes);
-//        System.out.println("\n" + "Coordinates: " + coordinates);
-//        System.out.println("Current tree length: " + sum + "\n");
-        return sum;
+        return Tools.calculateTreeLength(apexes);
     }
 
-    private static void clearAllConnections(List<TreeApex> apexes) {
+    public static void clearAllConnections(List<TreeApex> apexes) {
         for (TreeApex e : apexes) {
             if (e.getPreviousApexId() != -2) {
                 e.setPreviousApexId(-1);
