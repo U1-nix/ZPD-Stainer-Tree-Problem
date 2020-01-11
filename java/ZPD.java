@@ -51,8 +51,8 @@ public class ZPD {
             if (length > currentLength) {
                 length = currentLength;
                 minimalTree.clear();
-                for (int j = 0; j < apexes.size(); j++) {
-                    minimalTree.add(apexes.get(j).clone());
+                for (TreeApex apex : apexes) {
+                    minimalTree.add(apex.clone());
                 }
             }
         }
